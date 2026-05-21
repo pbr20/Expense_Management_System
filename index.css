@@ -1,0 +1,181 @@
+body {
+
+    margin: 0;
+    padding: 0;
+
+    font-family: Arial, sans-serif;
+
+    background-color: #dbe7f5;
+}
+
+.sidebar {
+
+    width: 250px;
+
+    min-height: 100vh;
+
+    background-color: #1f3c88;
+
+    color: white;
+
+    padding: 20px;
+}
+
+.sidebar h2 {
+
+    text-align: center;
+}
+
+.sidebar ul {
+
+    list-style: none;
+
+    padding: 0;
+}
+
+.sidebar li {
+
+    margin-top: 20px;
+}
+
+.sidebar a {
+
+    text-decoration: none;
+
+    color: white;
+
+    font-size: 18px;
+}
+
+.main-content {
+
+    padding: 20px;
+}
+
+.summary-card {
+
+    padding: 20px;
+
+    text-align: center;
+}
+
+.card {
+
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+.chart-container {
+
+    width: 400px;
+
+    margin: auto;
+}
+
+.dark-mode {
+
+    background-color: #1e1e1e;
+
+    color: white;
+}
+
+.dark-mode .card {
+
+    background-color: #333;
+
+    color: white;
+}
+
+.dark-mode .sidebar {
+
+    background-color: black;
+}
+
+.dark-mode table {
+
+    color: white;
+}
+
+@media (max-width: 800px) {
+
+    .d-flex {
+
+        flex-direction: column;
+    }
+
+    .sidebar {
+
+        width: 100%;
+
+        min-height: auto;
+    }
+
+    .chart-container {
+
+        width: 100%;
+    }
+}
+
+.login-body {
+
+    background: #dbe7f5;
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+
+    height: 100vh;
+}
+
+.login-card {
+
+    background: white;
+
+    padding: 30px;
+
+    border-radius: 10px;
+
+    width: 350px;
+
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+
+    transition: 0.3s;
+}
+
+.login-card:hover {
+
+    transform: scale(1.02);
+}
+
+.profile-image {
+
+    width: 100px;
+
+    display: block;
+
+    margin: auto;
+}
+
+.footer {
+
+    text-align: center;
+
+    padding: 20px;
+
+    margin-top: 40px;
+
+    background: #1f3c88;
+
+    color: white;
+}
+
+.card {
+
+    transition: 0.3s;
+}
+
+.card:hover {
+
+    transform: translateY(-5px);
+}
