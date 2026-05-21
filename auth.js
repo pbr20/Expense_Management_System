@@ -5,13 +5,20 @@ import {
     getAuth,
     createUserWithEmailAndPassword,
     signInWithEmailAndPassword,
-    signOut
+    signOut,
+    setPersistence,
+    browserLocalPersistence,
+    browserSessionPersistence
 }
 from "https://www.gstatic.com/firebasejs/12.13.0/firebase-auth.js";
 
+
+// ================= FIREBASE =================
+
 const firebaseConfig = {
 
-    apiKey: "AIzaSyCSZqCOnXri1hDnk9JOKDFHbPUWkgJND0c",
+    apiKey:
+        "AIzaSyCSZqCOnXri1hDnk9JOKDFHbPUWkgJND0c",
 
     authDomain:
         "expensemanagementsystem-2d18b.firebaseapp.com",
@@ -55,26 +62,142 @@ if (registerForm) {
 
             e.preventDefault();
 
+            let name =
+                document.getElementById("name")
+                .value.trim();
+
             let email =
                 document.getElementById("email")
-                .value;
+                .value.trim();
 
             let password =
                 document.getElementById("password")
+                .value.trim();
+
+            let age =
+                document.getElementById("age")
+                .value.trim();
+
+            let phone =
+                document.getElementById("phone")
+                .value.trim();
+
+            let profession =
+                document.getElementById("profession")
                 .value;
+
+            let country =
+                document.getElementById("country")
+                .value.trim();
+
+            let monthlyIncome =
+                document.getElementById("monthlyIncome")
+                .value.trim();
+
+            let goal =
+                document.getElementById("goal")
+                .value.trim();
+
+            let terms =
+                document.getElementById("terms")
+                .checked;
+
+            let gender =
+                document.querySelector(
+                    'input[name="gender"]:checked'
+                );
+
+            // ===== VALIDATION =====
+
+            if (
+                name === "" ||
+                email === "" ||
+                password === "" ||
+                age === "" ||
+                phone === "" ||
+                country === "" ||
+                monthlyIncome === "" ||
+                goal === ""
+            ) {
+
+                alert("Please fill all fields");
+
+                return;
+            }
+
+            if (!gender) {
+
+                alert("Please select gender");
+
+                return;
+            }
+
+            if (!terms) {
+
+                alert("Please accept terms and conditions");
+
+                return;
+            }
+
+            if (password.length < 6) {
+
+                alert(
+                    "Password must be at least 6 characters"
+                );
+
+                return;
+            }
 
             try {
 
-                await createUserWithEmailAndPassword(
-                    auth,
-                    email,
-                    password
+                // CREATE ACCOUNT
+
+                let userCredential =
+                    await createUserWithEmailAndPassword(
+                        auth,
+                        email,
+                        password
+                    );
+
+                let user =
+                    userCredential.user;
+
+                // SAVE EXTRA USER INFO
+
+                let profileData = {
+
+                    uid: user.uid,
+
+                    name: name,
+
+                    email: email,
+
+                    age: age,
+
+                    phone: phone,
+
+                    gender: gender.value,
+
+                    profession: profession,
+
+                    country: country,
+
+                    monthlyIncome: monthlyIncome,
+
+                    financialGoal: goal
+                };
+
+                localStorage.setItem(
+                    email + "_profile",
+                    JSON.stringify(profileData)
                 );
 
-                alert("Registration Successful");
+                alert(
+                    "Registration Successful"
+                );
 
                 window.location.href =
-                    "login.html";
+                    "index.html";
             }
 
             catch (error) {
@@ -101,13 +224,45 @@ if (loginForm) {
 
             let email =
                 document.getElementById("loginEmail")
-                .value;
+                .value.trim();
 
             let password =
                 document.getElementById("loginPassword")
-                .value;
+                .value.trim();
+
+            let rememberMe =
+                document.getElementById("rememberMe")
+                .checked;
+
+            if (
+                email === "" ||
+                password === ""
+            ) {
+
+                alert("Please fill all fields");
+
+                return;
+            }
 
             try {
+
+                // REMEMBER ME
+
+                if (rememberMe) {
+
+                    await setPersistence(
+                        auth,
+                        browserLocalPersistence
+                    );
+                }
+
+                else {
+
+                    await setPersistence(
+                        auth,
+                        browserSessionPersistence
+                    );
+                }
 
                 await signInWithEmailAndPassword(
                     auth,
@@ -118,7 +273,7 @@ if (loginForm) {
                 alert("Login Successful");
 
                 window.location.href =
-                   "home_page.html";
+                    "home_page.html";
             }
 
             catch (error) {
@@ -134,12 +289,20 @@ if (loginForm) {
 
 window.logout = async function () {
 
-    await signOut(auth);
+    try {
 
-    alert("Logged Out");
+        await signOut(auth);
 
-    window.location.href =
-        "index.html";
+        alert("Logged Out Successfully");
+
+        window.location.href =
+            "index.html";
+    }
+
+    catch (error) {
+
+        alert(error.message);
+    }
 };
 
 
@@ -155,7 +318,9 @@ if (showPassword) {
         function () {
 
             let password =
-                document.getElementById("loginPassword");
+                document.getElementById(
+                    "loginPassword"
+                );
 
             if (this.checked) {
 

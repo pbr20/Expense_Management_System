@@ -288,11 +288,19 @@ function toggleDarkMode() {
 
 function setBudget() {
 
+    let inputBudget =
+        document.getElementById("budgetInput")
+        .value;
+
+    if (inputBudget === "") {
+
+        alert("Please enter budget");
+
+        return;
+    }
+
     budget =
-        Number(
-            document.getElementById("budgetInput")
-            .value
-        );
+        Number(inputBudget);
 
     localStorage.setItem(
         currentUser + "_budget",
@@ -300,8 +308,93 @@ function setBudget() {
     );
 
     updateBudgetStatus();
+
+    document.getElementById("budgetInput")
+    .value = "";
+
+    alert("Budget Saved Successfully");
 }
 
+function updateBudgetStatus() {
+
+    let totalExpense = 0;
+
+    let currentDate =
+        new Date();
+
+    let currentMonth =
+        currentDate.getMonth();
+
+    let currentYear =
+        currentDate.getFullYear();
+
+    transactions.forEach((transaction) => {
+
+        if (
+            transaction.type === "expense"
+        ) {
+
+            let transactionDate =
+                new Date(transaction.date);
+
+            let transactionMonth =
+                transactionDate.getMonth();
+
+            let transactionYear =
+                transactionDate.getFullYear();
+
+            // ONLY CURRENT MONTH EXPENSE
+
+            if (
+                transactionMonth === currentMonth &&
+                transactionYear === currentYear
+            ) {
+
+                totalExpense +=
+                    transaction.amount;
+            }
+        }
+    });
+
+    let status =
+        document.getElementById(
+            "budgetStatus"
+        );
+
+    if (budget === 0) {
+
+        status.innerHTML =
+            "No Budget Set Yet";
+
+        status.style.color =
+            "black";
+
+        return;
+    }
+
+    if (totalExpense > budget) {
+
+        status.innerHTML =
+            "Warning: Monthly Budget Exceeded!";
+
+        status.style.color =
+            "red";
+    }
+
+    else {
+
+        let remaining =
+            budget - totalExpense;
+
+        status.innerHTML =
+            "Remaining Monthly Budget: " +
+            remaining +
+            " BDT";
+
+        status.style.color =
+            "green";
+    }
+}
 window.addTransaction =
     addTransaction;
 
