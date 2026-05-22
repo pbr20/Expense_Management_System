@@ -5,7 +5,8 @@ from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
 
 import {
     getAuth,
-    onAuthStateChanged
+    onAuthStateChanged,
+    signOut
 }
 from "https://www.gstatic.com/firebasejs/12.13.0/firebase-auth.js";
 
@@ -52,6 +53,37 @@ let tableBody =
 
 let chart;
 
+// ================= QUOTE API =================
+
+async function loadQuote() {
+
+    try {
+
+        let response =
+            await fetch(
+                "https://dummyjson.com/quotes/random"
+            );
+
+        let data =
+            await response.json();
+
+        document.getElementById("quote")
+        .innerHTML =
+            `"${data.quote}" — ${data.author}`;
+    }
+
+    catch (error) {
+
+        document.getElementById("quote")
+        .innerHTML =
+            "Unable to load quote";
+    }
+}
+
+loadQuote();
+
+window.loadQuote =
+    loadQuote;
 
 // ================= AUTH CHECK =================
 
@@ -395,6 +427,17 @@ function updateBudgetStatus() {
             "green";
     }
 }
+// ================= LOGOUT =================
+
+window.logout = async function () {
+
+    await signOut(auth);
+
+    alert("Logged Out Successfully");
+
+    window.location.href =
+        "index.html";
+};
 window.addTransaction =
     addTransaction;
 
