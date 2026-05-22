@@ -1,5 +1,5 @@
 import { initializeApp }
-from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
+    from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
 
 import {
     getAuth,
@@ -10,8 +10,13 @@ import {
     browserLocalPersistence,
     browserSessionPersistence
 }
-from "https://www.gstatic.com/firebasejs/12.13.0/firebase-auth.js";
-
+    from "https://www.gstatic.com/firebasejs/12.13.0/firebase-auth.js";
+import {
+    getDatabase,
+    ref,
+    set
+}
+    from "https://www.gstatic.com/firebasejs/12.13.0/firebase-database.js";
 
 // ================= FIREBASE =================
 
@@ -48,6 +53,8 @@ const app =
 const auth =
     getAuth(app);
 
+const database =
+    getDatabase(app);
 
 // ================= REGISTER =================
 
@@ -64,43 +71,43 @@ if (registerForm) {
 
             let name =
                 document.getElementById("name")
-                .value.trim();
+                    .value.trim();
 
             let email =
                 document.getElementById("email")
-                .value.trim();
+                    .value.trim();
 
             let password =
                 document.getElementById("password")
-                .value.trim();
+                    .value.trim();
 
             let age =
                 document.getElementById("age")
-                .value.trim();
+                    .value.trim();
 
             let phone =
                 document.getElementById("phone")
-                .value.trim();
+                    .value.trim();
 
             let profession =
                 document.getElementById("profession")
-                .value;
+                    .value;
 
             let country =
                 document.getElementById("country")
-                .value.trim();
+                    .value.trim();
 
             let monthlyIncome =
                 document.getElementById("monthlyIncome")
-                .value.trim();
+                    .value.trim();
 
             let goal =
                 document.getElementById("goal")
-                .value.trim();
+                    .value.trim();
 
             let terms =
                 document.getElementById("terms")
-                .checked;
+                    .checked;
 
             let gender =
                 document.querySelector(
@@ -187,17 +194,20 @@ if (registerForm) {
                     financialGoal: goal
                 };
 
-                localStorage.setItem(
-                    email + "_profile",
-                    JSON.stringify(profileData)
+                await set(
+                    ref(
+                        database,
+                        "users/" + user.uid + "/profile"
+                    ),
+                    profileData
                 );
 
                 alert(
                     "Registration Successful"
                 );
 
-               window.location.href =
-    "./index.html";
+                window.location.href =
+                    "./index.html";
             }
 
             catch (error) {
@@ -224,15 +234,15 @@ if (loginForm) {
 
             let email =
                 document.getElementById("loginEmail")
-                .value.trim();
+                    .value.trim();
 
             let password =
                 document.getElementById("loginPassword")
-                .value.trim();
+                    .value.trim();
 
             let rememberMe =
                 document.getElementById("rememberMe")
-                .checked;
+                    .checked;
 
             if (
                 email === "" ||
@@ -273,7 +283,7 @@ if (loginForm) {
                 alert("Login Successful");
 
                 window.location.href =
-    "./home_page.html";
+                    "./home_page.html";
             }
 
             catch (error) {
@@ -295,8 +305,8 @@ window.logout = async function () {
 
         alert("Logged Out Successfully");
 
-       window.location.href =
-    "./index.html";
+        window.location.href =
+            "./index.html";
     }
 
     catch (error) {

@@ -9,6 +9,13 @@ import {
 }
 from "https://www.gstatic.com/firebasejs/12.13.0/firebase-auth.js";
 
+import {
+    getDatabase,
+    ref,
+    get
+}
+from "https://www.gstatic.com/firebasejs/12.13.0/firebase-database.js";
+
 const firebaseConfig = {
 
     apiKey:
@@ -42,7 +49,10 @@ const app =
 const auth =
     getAuth(app);
 
-onAuthStateChanged(auth, (user) => {
+const database =
+    getDatabase(app);
+
+onAuthStateChanged(auth, async (user) => {
 
     if (!user) {
 
@@ -52,14 +62,37 @@ onAuthStateChanged(auth, (user) => {
         return;
     }
 
-    let transactions =
-        JSON.parse(
-            localStorage.getItem(
-                user.email + "_transactions"
-            )
-        ) || [];
+    try {
 
-    loadAnalytics(transactions);
+        let snapshot =
+            await get(
+                ref(
+                    database,
+                    "users/" +
+                    user.uid +
+                    "/transactions"
+                )
+            );
+
+        let transactions = [];
+
+        if (snapshot.exists()) {
+
+            transactions =
+                snapshot.val();
+        }
+
+        loadAnalytics(transactions);
+    }
+
+    catch (error) {
+
+        console.log(error);
+
+        alert(
+            "Failed to load analytics data"
+        );
+    }
 });
 
 function loadAnalytics(transactions) {
