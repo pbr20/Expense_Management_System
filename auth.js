@@ -196,8 +196,8 @@ if (registerForm) {
                     "Registration Successful"
                 );
 
-                window.location.href =
-                    "index.html";
+               window.location.href =
+    "./index.html";
             }
 
             catch (error) {
@@ -273,7 +273,7 @@ if (loginForm) {
                 alert("Login Successful");
 
                 window.location.href =
-                    "home_page.html";
+    "./home_page.html";
             }
 
             catch (error) {
@@ -295,8 +295,8 @@ window.logout = async function () {
 
         alert("Logged Out Successfully");
 
-        window.location.href =
-            "index.html";
+       window.location.href =
+    "./index.html";
     }
 
     catch (error) {
