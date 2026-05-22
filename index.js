@@ -1,4 +1,12 @@
 import {
+    getDatabase,
+    ref,
+    set,
+    get
+}
+from "https://www.gstatic.com/firebasejs/12.13.0/firebase-database.js";
+
+import {
     initializeApp
 }
 from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
@@ -41,6 +49,9 @@ const app =
 
 const auth =
     getAuth(app);
+
+const database =
+    getDatabase(app);
 
 let transactions = [];
 
@@ -87,31 +98,66 @@ window.loadQuote =
 
 // ================= AUTH CHECK =================
 
-onAuthStateChanged(auth, (user) => {
+onAuthStateChanged(auth, async (user) => {
 
-   if (!user) {
+    if (!user) {
 
-    window.location.href =
-        "./index.html";
-}
+        window.location.href =
+            "./index.html";
+    }
 
     else {
 
-        currentUser = user.email;
+        currentUser =
+            user.uid;
 
-        transactions =
-            JSON.parse(
-                localStorage.getItem(
-                    currentUser + "_transactions"
-                )
-            ) || [];
+        // LOAD TRANSACTIONS
 
-        budget =
-            Number(
-                localStorage.getItem(
-                    currentUser + "_budget"
-                )
-            ) || 0;
+        let transactionRef =
+            ref(
+                database,
+                "users/" +
+                currentUser +
+                "/transactions"
+            );
+
+        let transactionSnapshot =
+            await get(transactionRef);
+
+        if (transactionSnapshot.exists()) {
+
+            transactions =
+                transactionSnapshot.val();
+        }
+
+        else {
+
+            transactions = [];
+        }
+
+        // LOAD BUDGET
+
+        let budgetRef =
+            ref(
+                database,
+                "users/" +
+                currentUser +
+                "/budget"
+            );
+
+        let budgetSnapshot =
+            await get(budgetRef);
+
+        if (budgetSnapshot.exists()) {
+
+            budget =
+                budgetSnapshot.val();
+        }
+
+        else {
+
+            budget = 0;
+        }
 
         displayTransactions();
 
@@ -167,10 +213,15 @@ function addTransaction() {
 
     transactions.push(transaction);
 
-    localStorage.setItem(
-        currentUser + "_transactions",
-        JSON.stringify(transactions)
-    );
+    set(
+    ref(
+        database,
+        "users/" +
+        currentUser +
+        "/transactions"
+    ),
+    transactions
+);
 
     displayTransactions();
 
@@ -251,10 +302,15 @@ function deleteTransaction(index) {
 
     transactions.splice(index, 1);
 
-    localStorage.setItem(
-        currentUser + "_transactions",
-        JSON.stringify(transactions)
-    );
+    set(
+    ref(
+        database,
+        "users/" +
+        currentUser +
+        "/transactions"
+    ),
+    transactions
+);
 
     displayTransactions();
 
@@ -334,10 +390,15 @@ function setBudget() {
     budget =
         Number(inputBudget);
 
-    localStorage.setItem(
-        currentUser + "_budget",
-        budget
-    );
+    set(
+    ref(
+        database,
+        "users/" +
+        currentUser +
+        "/budget"
+    ),
+    budget
+);
 
     updateBudgetStatus();
 
