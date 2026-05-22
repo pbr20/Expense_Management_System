@@ -435,8 +435,7 @@ window.logout = async function () {
 
     alert("Logged Out Successfully");
 
-    window.location.href =
-        "index.html";
+    window.location.replace("./index.html");
 };
 window.addTransaction =
     addTransaction;
